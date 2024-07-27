@@ -2,7 +2,7 @@
 
 workspace_dir="$HOME/workplace"
 package_subdir="src"
-setup_command="nvim"
+editor_command="nvim"
 
 projects_list=$(find -L "$HOME/workplace" -type d -maxdepth 1 -mindepth 1 -not -path "*/.*")
 
@@ -12,5 +12,9 @@ packages_list=$(find -L "$project_dir/$package_subdir" -type d -maxdepth 1 -mind
 
 package_dir=$(echo $packages_list | fzf)
 
-eval $setup_command $package_dir
+session_name=$(basename $package_dir)
+
+tmux new-session -d -c $package_dir -s "$session_name-editor" "$editor_command $package_dir"
+tmux new-session -d -c $package_dir -s "$session_name-build"
+tmux attach-session -t "$session_name-editor"
 
