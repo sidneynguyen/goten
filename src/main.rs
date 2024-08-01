@@ -9,20 +9,34 @@ fn main() {
 
     let workspace_path: String = format!("{}/workplace", home_env_var);
 
-    let projects_list = find_projects(workspace_path);
+    let package_subdir_separator = "src";
+
+    let projects_list = find_directories(workspace_path);
 
     let project_dir = fuzzy_find(projects_list);
 
-    println!("{}", project_dir);
+    let package_subdir = format!(
+        "{}/{}",
+        project_dir.replace("\n", ""),
+        package_subdir_separator
+    );
+
+    let packages_list = find_directories(package_subdir);
+
+    let package_dir = fuzzy_find(packages_list);
+
+    println!("{}", package_dir);
 }
 
-fn find_projects(workspace_path: String) -> String {
+fn find_directories(base_dir_path: String) -> String {
     let args = vec![
         "-L",
-        &workspace_path,
+        &base_dir_path,
         "-type",
         "d",
         "-maxdepth",
+        "1",
+        "-mindepth",
         "1",
         "-not",
         "-path",
