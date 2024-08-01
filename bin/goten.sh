@@ -14,7 +14,8 @@ package_dir=$(echo $packages_list | fzf)
 
 session_name=$(basename $package_dir)
 
-tmux new-session -d -c $package_dir -s "$session_name-editor" "$editor_command $package_dir"
-tmux new-session -d -c $package_dir -s "$session_name-build"
-tmux attach-session -t "$session_name-editor"
+cd $package_dir
+# tmux new-session -d -c $package_dir -s "$session_name-editor" "$editor_command $package_dir"
+# tmux new-session -d -c $package_dir -s "$session_name-build"
+# tmux attach-session -t "$session_name-editor"
 
