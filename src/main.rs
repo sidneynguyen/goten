@@ -23,9 +23,11 @@ fn main() {
 
     let packages_list = find_directories(package_subdir);
 
-    let package_dir = fuzzy_find(packages_list);
+    let package_dir = fuzzy_find(packages_list).trim().to_string();
 
-    println!("{}", package_dir);
+    let package_name = package_dir.split("/").last().unwrap().trim().to_string();
+
+    tmux(&package_dir, &package_name);
 }
 
 fn find_directories(base_dir_path: String) -> String {
@@ -74,4 +76,25 @@ fn fuzzy_find(fuzzy_find_str: String) -> String {
     let stdout = String::from_utf8_lossy(&output.stdout);
 
     return stdout.to_string();
+}
+
+fn tmux(session_dir: &String, session_name: &String) {
+    //let first_cmd = &format!("cd {} && nvim", session_dir);
+
+    let args = vec![
+        "new-session",
+        "-s",
+        session_name,
+        "-c",
+        session_dir,
+        "nvim",
+        ";",
+        "split-window",
+        "-h",
+        ";",
+        "select-pane",
+        "-L",
+    ];
+
+    Command::new("tmux").args(args).status().expect("Failed");
 }
