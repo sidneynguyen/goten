@@ -4,6 +4,8 @@ use std::{
     process::{Command, Stdio},
 };
 
+use uuid::Uuid;
+
 fn main() {
     let home_env_var: String = env::var("HOME").expect("HOME required");
 
@@ -27,7 +29,11 @@ fn main() {
 
     let package_name = package_dir.split("/").last().unwrap().trim().to_string();
 
-    tmux(&package_dir, &package_name);
+    let session_id = Uuid::new_v4();
+
+    let session_name = package_name.to_string() + &session_id.to_string();
+
+    tmux(&package_dir, &session_name);
 }
 
 fn find_directories(base_dir_path: String) -> String {
